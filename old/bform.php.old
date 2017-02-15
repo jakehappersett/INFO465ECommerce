@@ -1,0 +1,28 @@
+ <?php
+$Locked = file_get_contents('/home/tinstructor/AppLock');
+if (trim($Locked) == 'Locked') {
+  $ModTime = date ("l F d, Y  H:i", filemtime('/home/tinstructor/MemberAppLocked'));
+  $FormTemplate = file_get_contents('TemplateSeSDoCForm.html');
+  $UI = "<h2>Not Accepting Applications Now</h2>
+
+<p>Applications were locked $ModTime.</p>
+<p>They'll be unlocked when we feel like it.  Try later...</p>";
+  $FormTemplate = str_replace('[[[TheForm]]]',$UI , $FormTemplate);
+  echo $FormTemplate;
+  exit;
+}
+
+function makeform($ValidationErrors) {
+	if (isset($_POST['firstname'])) {
+		extract($_POST);
+	} else {
+		$firstname = '';
+		$lastname = '';
+		$street = '';	
+	}
+	$red = " <span class="Flag">* </span> ";
+	
+	
+	
+	
+
