@@ -4,7 +4,8 @@
 //  $ModTime = date ("l F d, Y  H:i", filemtime('/home/tinstructor/MemberAppLocked'));
 //  $FormTemplate = file_get_contents('templatebunform.html');
 //  $UI = "<h2>Not Accepting Applications Now</h2>\n\n<p>Applications were locked $ModTime.</p>\n<p>They'll be unlocked when we feel like it.  Try later...</p>";
-//  $FormTemplate = str_replace('[[[TheForm]]]',$UI , $FormTemplate); //  echo $FormTemplate;
+//  $FormTemplate = str_replace('[[[TheForm]]]',$UI , $FormTemplate);
+//  echo $FormTemplate;
 //  exit;
 //}
 
@@ -30,13 +31,13 @@ function MakeTheForm($ValidationErrors) {
     $MAColor = '';
     $MAPass1 = '';
     $MAPass2 = '';
-    $Haytype = '';
+    $MALeastFavoriteWeather = '';
     //$MAStatesVisited = '';
     $MAOtherStatesVisited = '';
   }
   $RedSplat = " <span class=\"Flag\">* </span> ";
   $TheForm = "<p> Click Submit when you've got it filled out! </p>
-   <fieldset>
+    <fieldset>
       <legend>Name &amp; Contact Data</legend>\n";
   if (isset($ValidationErrors['Firstname'])) { $SplatSlug = $RedSplat; } else { $SplatSlug = ''; }
   $TheForm .= "<p><label for=\"Firstname\">$SplatSlug First Name:</label>
@@ -44,7 +45,7 @@ function MakeTheForm($ValidationErrors) {
             </p><br /> \n";
   if (isset($ValidationErrors['Lastname'])) { $SplatSlug = $RedSplat; } else { $SplatSlug = ''; }
   $TheForm .= "      <p><label for=\"Lastname\">$SplatSlug Last Name:</label>
-          <input type=\"text\" name=\"Lastname\" id=\"Lastname\" value=\"$Lastname\" placeholder=\"Lastname\" autofocus />
+          <input type=\"text\" name=\"Lastname\" id=\"Lastname\" value=\"$Firstname\" placeholder=\"Lastname\" autofocus />
             </p><br /> \n";
   if (isset($ValidationErrors['Address'])) { $SplatSlug = $RedSplat; } else { $SplatSlug = ''; }
   $TheForm .= "      <p><label for=\"Address\">$SplatSlug Address:</label>
@@ -75,7 +76,7 @@ function MakeTheForm($ValidationErrors) {
           <p><label for=\"MAPass2\"> Re-enter Password:</label>
           <input type=\"text\" name=\"MAPass2\" id=\"MAPass2\" value=\"$MAPass2\" placeholder=\"Enter it again, please\" />
         </p><br /> \n";
-  $TheForm .= "       
+  $TheForm .= "        
    </fieldset>\n";
   $TheForm .= "   <fieldset><legend>Type(s) of Rabbits you own</legend>\n";
   //Make check boxes for MASEStatesVisited[] and radio buttons for FavSEState from file StatesSE
@@ -122,13 +123,13 @@ $FavStateRB
            <label for=\"Haytype\" style=\"clear:both;\">$SplatSlug What type of Hay do you feed your rabbit?</label>
            <select name=\"Haytype\" id=\"Haytype\" size=\"4\" >
  ";
-  if ($Haytype== 'Timothy') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
+  if ($MALeastFavoriteWeather == 'Timothy') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
   $TheForm .= "            <option value=\"Timothy\" $SelectedSlug>Timothy</option>\n";
-  if ($Haytype== 'Orchard') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
+  if ($MALeastFavoriteWeather == 'Orchard') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
   $TheForm .= "             <option value=\"Orchard\" $SelectedSlug>Orchard</option>\n";
-  if ($Haytype== 'Thunder') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
+  if ($MALeastFavoriteWeather == 'Thunder') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
   $TheForm .= "             <option value=\"Oat\" $SelectedSlug>Oat</option>\n";
-  if ($Haytype== 'Oat') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
+  if ($MALeastFavoriteWeather == 'Oat') { $SelectedSlug = "selected"; } else { $SelectedSlug = ''; }
   $TheForm .= "             <option value=\"Alfalfa\" $SelectedSlug>Alfalfa</option>\n";
   $TheForm .= "
            </select>
@@ -153,63 +154,6 @@ $FavStateRB
   $TheForm .= "    </div>\n";
   $TheForm .= " </fieldset>\n";
   return $TheForm;
-}
-
-//Mod here to add UpdateMemberApp() to the sample script
-function UpdateMemberApp() {
-  $FormData = $_POST;
-  //For this simple form we can sanitize all the FormData in a loop, 
-  //the second loop is to sanitize data from checkboxes and selects that return an array
-  foreach ($FormData as $FieldName => $FieldValue) {
-    if (is_array($FormData[$FieldName])) {
-      foreach ($FormData[$FieldName] as $Elt => $EltValue) {
-        $FormData[$FieldName][$Elt] = addslashes($EltValue);
-      }
-    } else {
-      $FormData[$FieldName] = addslashes($FieldValue);
-    }
-  }
-  extract($FormData);
-  if (isset($Id)) {
-    $Verb = 'update';
-    $Where = "where Id=$Id";
-  } else {
-    $Verb = 'insert into';
-    $Where = '';
-  }
-  if (is_array($MASEStatesVisited)) {
-    $MASEStatesVisited = implode('|',$MASEStatesVisited);
-  }  
-  if (is_array($MAOtherStatesVisited)) {
-    $MAOtherStatesVisited = implode('|',$MAOtherStatesVisited);
-  }  
-  $MAUserAgent = addslashes($_SERVER['HTTP_USER_AGENT']);
-  $MAIPAddress = addslashes($_SERVER['REMOTE_ADDR']);
-  $SQLStmt = "$Verb MembershipApps set FIRSTNAME ='$Firstname',
-			LASTNAME='$Lastname',
-			ADDRESS='$Address',
-			ADDRESSTWO='$Address2',
-			CITY='$City',
-			ZIP='$Zip',
-			MAEMAIL='$MAEmail',
-			MAPass='$MAPass1',
-			MASEStatesVisited='$MASEStatesVisited',
-			MASEStateFavorite='$MASEStateFavorite',
-			MAOpinion='$MAOpinion',
-			Haytype='$Haytype',
-			MAOtherStatesVisited='$MAOtherStatesVisited',
-	      $Where";
-  //echo $SQLStmt; exit;
-  //$DB = mysql_connect
-  $DBCnxn = mysql_connect('localhost', 'jhappresett', 'Jsett') or die("Unable to connect to database");
-  $DB = mysql_select_db('jhappersett', $DBCnxn) or die("Unable to select database at this time...");
-  mysql_query($SQLStmt) or die("Couldn't update database with '$SQLStmt'...");
-  if (isset($Id)) {
-    return $Id;
-  } else {
-    $Id = mysql_insert_id();
-  }
-  return $Id;
 }
 //
 //Mainline 
@@ -239,7 +183,8 @@ if ($View == 'First') {
   extract($_POST);
   //Validate what came back.
   if (!isset($Firstname) or $Firstname== '') $ValidationErrors['Firstname'] = "First name is missing or empty.  Please enter your first name before clicking Submit.";
-  if (!isset($Address) or $Address== '') $ValidationErrors['Lastname'] = "Name is missing or empty.  Please enter your last name before clicking Submit.";
+  if (!isset($Address) or $Address== '') $ValidationErrors['Address'] = "Name is missing or empty.  Please enter your last name before clicking Submit.";
+  if (!isset($LastName) or $LastName== '') $ValidationErrors['LastName'] = "Last Nameis missing or empty.  Please enter your address before clicking Submit.";
   if (!isset($City) or $City== '') $ValidationErrors['City'] = "City is missing or empty.  Please enter your city before clicking Submit.";
   if (!isset($Zip) or $Zip== '') $ValidationErrors['Zip'] = "Zip is missing or empty.  Please enter your zip before clicking Submit.";
   if (!isset($MAEmail) or $MAEmail == '') { 
@@ -248,9 +193,9 @@ if ($View == 'First') {
     $ValidationErrors['MAEmail'] = "The email  is not a valid format.";
   }
   if (!isset($MAOpinion) or strlen($MAOpinion) < 50) $ValidationErrors['MAOpinion'] = "Please write least 50 characters."; 
-  if (!isset($Haytype) or $Haytype== '') {
-    $_POST['Haytype'] = '';
-    $ValidationErrors['Haytype'] = "Please select your favorite hay!";
+  if (!isset($MALeastFavoriteWeather) or $MALeastFavoriteWeather == '') {
+    $_POST['MALeastFavoriteWeather'] = '';
+    $ValidationErrors['MALeastFavoriteWeather'] = "Please select your favorite hay!";
   }
   if (!isset($MASEStateFavorite) or $MASEStateFavorite  == '') $ValidationErrors['MASEStateFavorite'] = "Please select your favorite habitat!";
   if ((!isset($MAPass1) or $MAPass1  == '') or (!isset($MAPass2) or $MAPass2  == '')) {
@@ -296,4 +241,3 @@ $FormTemplate = str_replace('[[[form]]]', $UI, $FormTemplate);
 echo $FormTemplate;
 exit;
 ?>
-
