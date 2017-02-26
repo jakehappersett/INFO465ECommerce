@@ -200,7 +200,7 @@ function UpdateMemberApp() {
 	      $Where";
   //echo $SQLStmt; exit;
   //$DB = mysql_connect
-  $DBCnxn = mysql_connect('localhost', 'jhappresett', 'Jsett') or die("Unable to connect to database");
+  $DBCnxn = mysql_connect('localhost', 'jhappersett', 'Jsett') or die("Unable to connect to database");
   $DB = mysql_select_db('jhappersett', $DBCnxn) or die("Unable to select database at this time...");
   mysql_query($SQLStmt) or die("Couldn't update database with '$SQLStmt'...");
   if (isset($Id)) {
