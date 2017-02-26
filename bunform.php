@@ -9,7 +9,7 @@
 //}
 
 
-  
+
 function MakeTheForm($ValidationErrors) {
   if (isset($_POST['Firstname'])) {
     extract($_POST);
@@ -23,7 +23,7 @@ function MakeTheForm($ValidationErrors) {
     $City = '';
     $State = '';
     $Zip = '';
-    $MAEmail = ''; 
+    $MAEmail = '';
     $MASEStatesVisited = '';
     $MASEStateFavorite = '';
     $MAOpinion = '';
@@ -31,7 +31,6 @@ function MakeTheForm($ValidationErrors) {
     $MAPass1 = '';
     $MAPass2 = '';
     $Haytype = '';
-    //$MAStatesVisited = '';
     $MAOtherStatesVisited = '';
   }
   $RedSplat = " <span class=\"Flag\">* </span> ";
@@ -67,15 +66,15 @@ function MakeTheForm($ValidationErrors) {
           <input type=\"text\" name=\"MAEmail\" id=\"MAEmail\" value=\"$MAEmail\" placeholder=\"Fictitious is fine!\" />
             </p><br />  \n";
   if (isset($ValidationErrors['MAPass'])) { $SplatSlug = $RedSplat; } else { $SplatSlug = ''; }
-  $TheForm .= "      
+  $TheForm .= "
           <p><label for=\"MAPass1\">$SplatSlug Password:</label>
           <input type=\"text\" name=\"MAPass1\" id=\"MAPass1\" value=\"$MAPass1\" placeholder=\"At least 8 characters...\" />
         </p><br /> \n";
-  $TheForm .= "      
+  $TheForm .= "
           <p><label for=\"MAPass2\"> Re-enter Password:</label>
           <input type=\"text\" name=\"MAPass2\" id=\"MAPass2\" value=\"$MAPass2\" placeholder=\"Enter it again, please\" />
         </p><br /> \n";
-  $TheForm .= "       
+  $TheForm .= "
    </fieldset>\n";
   $TheForm .= "   <fieldset><legend>Type(s) of Rabbits you own</legend>\n";
   //Make check boxes for MASEStatesVisited[] and radio buttons for FavSEState from file StatesSE
@@ -83,22 +82,22 @@ function MakeTheForm($ValidationErrors) {
   $FavStateRB = '';
   while ($AState = fgets($StatesSEFile)) {
     $AState = trim($AState);
-    $AStateNoSpaces = str_replace(' ','',$AState);  //Used to make id with no spaces so extract() will work 
-    if (isset($MASEStatesVisited) and $MASEStatesVisited != '' and in_array($AState, $MASEStatesVisited)) { 
-      $CheckedSlug = 'checked'; 
-    } else { 
-      $CheckedSlug = ''; 
+    $AStateNoSpaces = str_replace(' ','',$AState);  //Used to make id with no spaces so extract() will work
+    if (isset($MASEStatesVisited) and $MASEStatesVisited != '' and in_array($AState, $MASEStatesVisited)) {
+      $CheckedSlug = 'checked';
+    } else {
+      $CheckedSlug = '';
     }
     $TheForm .= "       <label for=\"Visited$AStateNoSpaces\" class=\"WideLabel\">
          <input type=\"checkbox\" name=\"MASEStatesVisited[]\" id=\"Visited$AStateNoSpaces\" value=\"$AState\" $CheckedSlug />$AState
-       </label>\n";         
-    if (isset($MASEStateFavorite) and $AState == $MASEStateFavorite) { 
-      $CheckedSlug = 'checked'; 
-    } else { 
-      $CheckedSlug = ''; 
+       </label>\n";
+    if (isset($MASEStateFavorite) and $AState == $MASEStateFavorite) {
+      $CheckedSlug = 'checked';
+    } else {
+      $CheckedSlug = '';
     }
     $FavStateRB .= "       <label for=\"Fav$AStateNoSpaces\" class=\"WideLabel\">
-         <input type=\"radio\" name=\"MASEStateFavorite\" id=\"Fav$AStateNoSpaces\" value=\"$AState\" $CheckedSlug />$AState </label>";         
+         <input type=\"radio\" name=\"MASEStateFavorite\" id=\"Fav$AStateNoSpaces\" value=\"$AState\" $CheckedSlug />$AState </label>";
   }
   $TheForm .= "    </fieldset> <fieldset><legend>Favorite Type of Rabbit</legend>
 $FavStateRB
@@ -109,13 +108,13 @@ $FavStateRB
       <legend>Rabbit Facts</legend>
       <div class=\"Row\">\n";
   if (isset($ValidationErrors['MAOpinion'])) { $SplatSlug = $RedSplat; } else { $SplatSlug = ''; }
-  $TheForm .= "   <div class=\"Col-12\">       
-          <label for=\"MAOpinion\" class=\"WideLabel\">$SplatSlug Describe the type of hutch you house your rabbit in. </label>      
+  $TheForm .= "   <div class=\"Col-12\">
+          <label for=\"MAOpinion\" class=\"WideLabel\">$SplatSlug Describe the type of hutch you house your rabbit in. </label>
             <textarea name=\"MAOpinion\" id=\"MAOpinion\" >$MAOpinion</textarea>
         </div>
         </div>
       <div class=\"Row\"><br/>";
-  //Hard coded small select           
+  //Hard coded small select
   if (isset($ValidationErrors['Haytype'])) { $SplatSlug = $RedSplat; } else { $SplatSlug = ''; }
   $TheForm .= "
         <div class=\"Col-6\">
@@ -133,7 +132,7 @@ $FavStateRB
   $TheForm .= "
            </select>
         </div>\n";
-  //Another hard coded single select with background-color           
+  //Another hard coded single select with background-color
 
   //Multi-select using contents of text file with Options...
   $TheForm .= " <div class=\"Col-6\">
@@ -158,7 +157,7 @@ $FavStateRB
 //Mod here to add UpdateMemberApp() to the sample script
 function UpdateMemberApp() {
   $FormData = $_POST;
-  //For this simple form we can sanitize all the FormData in a loop, 
+  //For this simple form we can sanitize all the FormData in a loop,
   //the second loop is to sanitize data from checkboxes and selects that return an array
   foreach ($FormData as $FieldName => $FieldValue) {
     if (is_array($FormData[$FieldName])) {
@@ -179,10 +178,10 @@ function UpdateMemberApp() {
   }
   if (is_array($MASEStatesVisited)) {
     $MASEStatesVisited = implode('|',$MASEStatesVisited);
-  }  
+  }
   if (is_array($MAOtherStatesVisited)) {
     $MAOtherStatesVisited = implode('|',$MAOtherStatesVisited);
-  }  
+  }
   $MAUserAgent = addslashes($_SERVER['HTTP_USER_AGENT']);
   $MAIPAddress = addslashes($_SERVER['REMOTE_ADDR']);
   $SQLStmt = "$Verb MembershipApps set FIRSTNAME ='$Firstname',
@@ -212,7 +211,7 @@ function UpdateMemberApp() {
   return $Id;
 }
 //
-//Mainline 
+//Mainline
 //Set if initially $PoppedUp or not, then track it, used to control Close Window button
 $PoppedUp = isset($_REQUEST['PoppedUp']);
 if (!isset($_REQUEST['View'])) {
@@ -226,7 +225,7 @@ if ($View == 'First') {
    <form method=\"POST\" name=\"bunform\" action=\"bunform.php\" onSubmit=\"return ValidateForm();\">";
   if ($PoppedUp) $UI .= "\n<input type=\"hidden\" name=\"PoppedUp\" value=\"Yep\">\n";
   $UI .= MakeTheForm('');
-  $UI .= " 
+  $UI .= "
      <p> <input type=\"submit\" name=\"View\" value=\"Submit Form\" style=\"position:50%;\">  </p>
      <p>Uncheck the box to disable JS ValidateForm: <input type=\"checkbox\" name=\"RunJS\" id=\"RunJS\" checked=\"checked\"></p>
      <p>Click <a href=\"#\" onClick=\"PopupAbout()\">About the Form</a> to pop up notes about the form, JavaScript, and PHP.</p>
@@ -234,7 +233,7 @@ if ($View == 'First') {
 } elseif ($View == 'Submit Form') {
   //print_r($_POST,false); exit;
   //They've filled in the form and clicked the Submit button, should be error free unless they've disabled JavaScript
-  //on their browser or the content is submitted by a bot.  
+  //on their browser or the content is submitted by a bot.
   $ValidationErrors = '';
   extract($_POST);
   //Validate what came back.
@@ -242,12 +241,12 @@ if ($View == 'First') {
   if (!isset($Address) or $Address== '') $ValidationErrors['Lastname'] = "Name is missing or empty.  Please enter your last name before clicking Submit.";
   if (!isset($City) or $City== '') $ValidationErrors['City'] = "City is missing or empty.  Please enter your city before clicking Submit.";
   if (!isset($Zip) or $Zip== '') $ValidationErrors['Zip'] = "Zip is missing or empty.  Please enter your zip before clicking Submit.";
-  if (!isset($MAEmail) or $MAEmail == '') { 
+  if (!isset($MAEmail) or $MAEmail == '') {
     $ValidationErrors['MAEmail'] = "The email address is empty.  Please enter your email address before clicking Submit.";
   } elseif (filter_var($MAEmail, FILTER_VALIDATE_EMAIL) === false) {
     $ValidationErrors['MAEmail'] = "The email  is not a valid format.";
   }
-  if (!isset($MAOpinion) or strlen($MAOpinion) < 50) $ValidationErrors['MAOpinion'] = "Please write least 50 characters."; 
+  if (!isset($MAOpinion) or strlen($MAOpinion) < 50) $ValidationErrors['MAOpinion'] = "Please write least 50 characters.";
   if (!isset($Haytype) or $Haytype== '') {
     $_POST['Haytype'] = '';
     $ValidationErrors['Haytype'] = "Please select your favorite hay!";
@@ -273,13 +272,13 @@ if ($View == 'First') {
     }
   $UI .= "</ul>\n";
   } else {
-  $UI .= "<p>Your form appears correct and would have been applied to the database
-    if we felt like it.  You're welcome to make any corrections that might be 
-    needed click Submit Form...</p>";
+  $MAID= UpdateMemberApp();
+  $UI .= "<p> It worked (hopefully) </p>";
   }
   $UI .= "<form method=\"POST\" name=\"bunform\" action=\"bunform.php\" onSubmit=\"return ValidateForm();\">\n";
   $UI .= "<h2>Bunny Membership Application</h2>\n";
   $UI .= MakeTheForm($ValidationErrors);
+  if (isset($MAId)) $UI .= "\n<input type=\"hidden\" name=\"MAId\" value=\"$MAId\" />";
   if ($PoppedUp) $UI .= "\n<input type=\"hidden\" name=\"PoppedUp\" value=\"Yep\" >\n";
   $UI .= " <p>Run JS ValidateForm: <input type=\"checkbox\" name=\"RunJS\" id=\"RunJS\" checked=\"checked\">  Click <input type=\"submit\" name=\"View\" value=\"Submit Form\"> if changes have been made.  </p>
  </form>";
@@ -287,13 +286,12 @@ if ($View == 'First') {
     $UI .= "<p>Click <input type=button value='Close Window' onclick='window.close()'> to close this window when you're done making changes...</p>";
   } else {
   $UI .= "<p>Use your browser's 'back button' or Alt + Left Arrow to return to the previous page...</p>";
-  } 
+  }
 } else {
   $UI = "<p><font color=red>! </font>Somehow we don't know what your next view should be '$View' is not valid...</p>";
-} 
+}
 $FormTemplate = file_get_contents('templatebunform.html');
 $FormTemplate = str_replace('[[[form]]]', $UI, $FormTemplate);
 echo $FormTemplate;
 exit;
 ?>
-
